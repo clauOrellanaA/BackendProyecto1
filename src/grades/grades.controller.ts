@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Body, Controller, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUser, CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -25,6 +27,7 @@ export class GradesController {
   }
 
   // Debe ir antes de cualquier ruta con parametro; PUT /grades/bulk no choca con PUT /grades
+  @ApiResponse({ status: 200, schema: responseSchemas.GradesController_bulk })
   @ApiOperation({ summary: 'Registrar varias notas a la vez (planilla); informa las que fallaron' })
   @Roles(Role.Admin, Role.Docente)
   @Put('bulk')
@@ -32,6 +35,7 @@ export class GradesController {
     return this.gradesService.bulkUpsert(dto, user);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.GradesController_findAll })
   @ApiOperation({ summary: 'Consultar notas de una matricula o de una evaluacion' })
   @Roles(Role.Admin, Role.Docente)
   @Get()
@@ -39,6 +43,7 @@ export class GradesController {
     return this.gradesService.findAll(query, user);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.GradesController_mine })
   @ApiOperation({ summary: 'Mis notas' })
   @Roles(Role.Estudiante)
   @Get('mine')
@@ -46,6 +51,7 @@ export class GradesController {
     return this.gradesService.findMine(user.id, query);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.GradesController_finalize })
   @ApiOperation({ summary: 'Calcular la nota final de una matricula y marcarla aprobada/reprobada' })
   @Roles(Role.Admin, Role.Docente)
   @Post('finalize/:enrollmentId')

@@ -60,6 +60,9 @@ export class PeriodsService {
 
     // Ciclo de vida: planificado -> abierto -> cerrado. El cierre solo se hace con POST /periods/:id/close
     if (dto.status && dto.status !== period.status) {
+      if (period.status === PeriodStatus.Open && dto.status === PeriodStatus.Planned) {
+        throw new BadRequestException('Un periodo abierto no puede volver a planificado');
+      }
       if (period.status === PeriodStatus.Closed) {
         throw new BadRequestException('Un periodo cerrado no se puede reabrir');
       }

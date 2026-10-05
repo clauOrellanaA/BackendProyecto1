@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUser, CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -22,6 +24,7 @@ export class StudentsController {
     return this.studentsService.create(dto);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.StudentsController_findAll })
   @ApiOperation({ summary: 'Listar estudiantes (filtros: q, program, active)' })
   @Roles(Role.Admin, Role.Docente)
   @Get()

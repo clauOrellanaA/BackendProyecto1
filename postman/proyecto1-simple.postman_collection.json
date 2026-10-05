@@ -1,13 +1,17 @@
 {
   "info": {
     "name": "Proyecto1 - Simple",
-    "description": "Todos los endpoints. Cada Crear/Actualizar trae un body de ejemplo; reemplaza los textos PEGA_AQUI_... por IDs reales. Pon el Bearer token en la pestana Authorization de la coleccion y el ID en la Path Variable de cada request.",
+    "description": "Todos los endpoints de la API /api/v1. Configura baseUrl con el origen del backend. Login guarda accessToken; las demas rutas heredan Bearer. Reemplaza PEGA_AQUI_... y las Path Variables con IDs reales; activa los query opcionales que necesites. Las operaciones de escritura modifican datos si se ejecutan.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
       "key": "baseUrl",
       "value": "http://localhost:3000"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
     }
   ],
   "item": [
@@ -20,15 +24,580 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/health",
+              "raw": "{{baseUrl}}/api/v1/health",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "health"
               ]
+            },
+            "description": "Estado de la API y de la conexion con MongoDB",
+            "auth": {
+              "type": "noauth"
             }
+          }
+        }
+      ]
+    },
+    {
+      "name": "users",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Listar usuarios (filtros: role, active, q)"
+          }
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Maria Lopez\",\n  \"email\": \"maria@universidad.edu\",\n  \"password\": \"Secret123!\",\n  \"role\": \"estudiante\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Crear un usuario"
+          }
+        },
+        {
+          "name": "Editar mi nombre",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Maria Lopez Gomez\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Editar mi nombre"
+          }
+        },
+        {
+          "name": "Mi perfil de usuario",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me"
+              ]
+            },
+            "description": "Mi perfil de usuario"
+          }
+        },
+        {
+          "name": "Ver un usuario por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Ver un usuario por ID"
+          }
+        },
+        {
+          "name": "Editar un usuario",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Editar un usuario"
+          }
+        },
+        {
+          "name": "Restablecer la contrasena de un usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/:id/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                ":id",
+                "reset-password"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newPassword\": \"NuevaClave123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Restablecer la contrasena de un usuario"
+          }
+        }
+      ]
+    },
+    {
+      "name": "deletions21312",
+      "item": [
+        {
+          "name": "Elimina un usuario sin perfil de estudiante/docente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina un usuario sin perfil de estudiante/docente"
+          }
+        },
+        {
+          "name": "Elimina un programa sin materias ni estudiantes",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/programs/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "programs",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina un programa sin materias ni estudiantes"
+          }
+        },
+        {
+          "name": "Elimina una facultad sin programas ni docentes",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/faculties/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "faculties",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina una facultad sin programas ni docentes"
+          }
+        },
+        {
+          "name": "Elimina un docente sin grupos",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/teachers/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "teachers",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina un docente sin grupos"
+          }
+        },
+        {
+          "name": "Elimina una materia sin grupos, matriculas ni dependientes",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subjects/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "subjects",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina una materia sin grupos, matriculas ni dependientes"
+          }
+        },
+        {
+          "name": "Elimina un periodo planificado sin grupos",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/periods/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "periods",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina un periodo planificado sin grupos"
+          }
+        },
+        {
+          "name": "Elimina un estudiante sin matriculas",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina un estudiante sin matriculas"
+          }
+        },
+        {
+          "name": "Elimina un grupo sin matriculas ni evaluaciones",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/groups/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina un grupo sin matriculas ni evaluaciones"
+          }
+        },
+        {
+          "name": "Elimina un salon que no este en ningun horario",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/classrooms/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "classrooms",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina un salon que no este en ningun horario"
+          }
+        },
+        {
+          "name": "Elimina una evaluacion sin notas registradas",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/evaluations/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "evaluations",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina una evaluacion sin notas registradas"
+          }
+        },
+        {
+          "name": "Elimina una nota puesta por error (matricula activa)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/grades/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "grades",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina una nota puesta por error (matricula activa)"
+          }
+        },
+        {
+          "name": "Elimina una de mis notificaciones",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/notifications/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notifications",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Elimina una de mis notificaciones"
           }
         }
       ]
@@ -47,26 +616,45 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/auth/login",
+              "raw": "{{baseUrl}}/api/v1/auth/login",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "auth",
                 "login"
               ]
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"admin@universidad.edu\",\n    \"password\": \"Secret123!\"\n}",
+              "raw": "{\n  \"email\": \"admin@universidad.edu\",\n  \"password\": \"Secret123!\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
+            },
+            "description": "Iniciar sesion: devuelve el token JWT",
+            "auth": {
+              "type": "noauth"
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const token = pm.response.json().accessToken;",
+                  "  if (token) pm.collectionVariables.set(\"accessToken\", token);",
+                  "}"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Me",
@@ -74,54 +662,24 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/auth/me",
+              "raw": "{{baseUrl}}/api/v1/auth/me",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "auth",
                 "me"
               ]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "users",
-      "item": [
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/users?page=1&limit=20",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "users"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "20"
-                }
-              ]
-            }
+            },
+            "description": "Datos de la sesion actual"
           }
         },
         {
-          "name": "Crear",
+          "name": "Cambiar mi contrasena (devuelve un token nuevo)",
           "request": {
-            "method": "POST",
+            "method": "PATCH",
             "header": [
               {
                 "key": "Content-Type",
@@ -129,24 +687,27 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/users",
+              "raw": "{{baseUrl}}/api/v1/auth/change-password",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "users"
+                "v1",
+                "auth",
+                "change-password"
               ]
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Maria Lopez\",\n    \"email\": \"maria@universidad.edu\",\n    \"password\": \"Secret123!\",\n    \"role\": \"estudiante\"\n}",
+              "raw": "{\n  \"currentPassword\": \"Secret123!\",\n  \"newPassword\": \"NuevaClave123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Cambiar mi contrasena (devuelve un token nuevo)"
           }
         }
       ]
@@ -165,24 +726,26 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/programs",
+              "raw": "{{baseUrl}}/api/v1/programs",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "programs"
               ]
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"code\": \"ISIS\",\n    \"name\": \"Ingenieria de Sistemas\",\n    \"totalCredits\": 160\n}",
+              "raw": "{\n  \"code\": \"ISIS\",\n  \"name\": \"Ingenieria de Sistemas\",\n  \"totalCredits\": 160\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Crear un programa"
           }
         },
         {
@@ -191,12 +754,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/programs?page=1&limit=20",
+              "raw": "{{baseUrl}}/api/v1/programs?page=1&limit=20",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "programs"
               ],
               "query": [
@@ -209,7 +773,8 @@
                   "value": "20"
                 }
               ]
-            }
+            },
+            "description": "Listar programas (filtros: q, faculty, active)"
           }
         },
         {
@@ -218,41 +783,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/programs/:id",
+              "raw": "{{baseUrl}}/api/v1/programs/:id",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "programs",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Actualizar",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/programs/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
+                "v1",
                 "programs",
                 ":id"
               ],
@@ -263,102 +800,7 @@
                 }
               ]
             },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\": \"Ingenieria de Sistemas y Computacion\",\n    \"totalCredits\": 165,\n    \"active\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "subjects",
-      "item": [
-        {
-          "name": "Crear",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/subjects",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "subjects"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"code\": \"MAT201\",\n    \"name\": \"Calculo 2\",\n    \"credits\": 4,\n    \"program\": \"PEGA_AQUI_EL_ID_DEL_PROGRAMA\",\n    \"semester\": 2,\n    \"prerequisites\": [\n        \"PEGA_AQUI_EL_ID_DE_LA_MATERIA_PRERREQUISITO\"\n    ]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/subjects?page=1&limit=20",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "subjects"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "20"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Obtener",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/subjects/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "subjects",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
+            "description": "Ver un programa por ID"
           }
         },
         {
@@ -372,13 +814,14 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/subjects/:id",
+              "raw": "{{baseUrl}}/api/v1/programs/:id",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "subjects",
+                "v1",
+                "programs",
                 ":id"
               ],
               "variable": [
@@ -390,22 +833,23 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Calculo Diferencial\",\n    \"credits\": 4,\n    \"semester\": 1,\n    \"prerequisites\": [],\n    \"active\": true\n}",
+              "raw": "{\n  \"name\": \"Ingenieria de Sistemas y Computacion\",\n  \"totalCredits\": 165,\n  \"active\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Editar un programa"
           }
         }
       ]
     },
     {
-      "name": "periods",
+      "name": "faculties",
       "item": [
         {
-          "name": "Crear",
+          "name": "Crear una facultad",
           "request": {
             "method": "POST",
             "header": [
@@ -415,79 +859,93 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/periods",
+              "raw": "{{baseUrl}}/api/v1/faculties",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "periods"
+                "v1",
+                "faculties"
               ]
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"code\": \"2026-2\",\n    \"startDate\": \"2026-08-01\",\n    \"endDate\": \"2026-12-15\"\n}",
+              "raw": "{\n  \"code\": \"FAC-BOG-ING\",\n  \"name\": \"Facultad de Ingeniería\",\n  \"campus\": \"Bogotá\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Crear una facultad"
           }
         },
         {
-          "name": "Listar",
+          "name": "Listar facultades",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/periods?page=1&limit=20",
+              "raw": "{{baseUrl}}/api/v1/faculties",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "periods"
+                "v1",
+                "faculties"
               ],
               "query": [
                 {
                   "key": "page",
-                  "value": "1"
+                  "value": "1",
+                  "disabled": true
                 },
                 {
                   "key": "limit",
-                  "value": "20"
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "campus",
+                  "value": "Bogotá",
+                  "disabled": true
                 }
               ]
-            }
+            },
+            "description": "Listar facultades"
           }
         },
         {
-          "name": "Obtener",
+          "name": "Ver una facultad por ID",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/periods/:id",
+              "raw": "{{baseUrl}}/api/v1/faculties/:id",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "periods",
+                "v1",
+                "faculties",
                 ":id"
               ],
               "variable": [
                 {
                   "key": "id",
-                  "value": ""
+                  "value": "",
+                  "description": "ID real del recurso"
                 }
               ]
-            }
+            },
+            "description": "Ver una facultad por ID"
           }
         },
         {
-          "name": "Actualizar",
+          "name": "Editar una facultad",
           "request": {
             "method": "PATCH",
             "header": [
@@ -497,174 +955,34 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/periods/:id",
+              "raw": "{{baseUrl}}/api/v1/faculties/:id",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
-                "periods",
+                "v1",
+                "faculties",
                 ":id"
               ],
               "variable": [
                 {
                   "key": "id",
-                  "value": ""
+                  "value": "",
+                  "description": "ID real del recurso"
                 }
               ]
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"status\": \"abierto\"\n}",
+              "raw": "{}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "students",
-      "item": [
-        {
-          "name": "Crear",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/students",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "students"
-              ]
             },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"user\": \"PEGA_AQUI_EL_ID_DEL_USUARIO_ESTUDIANTE\",\n    \"code\": \"2026001\",\n    \"program\": \"PEGA_AQUI_EL_ID_DEL_PROGRAMA\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "Listar",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/students?page=1&limit=20",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "students"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "20"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Mi perfil",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/students/me",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "students",
-                "me"
-              ]
-            }
-          }
-        },
-        {
-          "name": "Obtener",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/students/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "students",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Actualizar",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/api/students/:id",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "students",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"code\": \"2026001\",\n    \"program\": \"PEGA_AQUI_EL_ID_DEL_PROGRAMA\",\n    \"active\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
+            "description": "Editar una facultad"
           }
         }
       ]
@@ -683,24 +1001,26 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/teachers",
+              "raw": "{{baseUrl}}/api/v1/teachers",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "teachers"
               ]
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"user\": \"PEGA_AQUI_EL_ID_DEL_USUARIO_DOCENTE\",\n    \"code\": \"DOC-001\",\n    \"department\": \"Ingenieria\"\n}",
+              "raw": "{\n  \"user\": \"PEGA_AQUI_EL_ID_DEL_USUARIO_DOCENTE\",\n  \"code\": \"DOC-001\",\n  \"faculty\": \"PEGA_AQUI_EL_ID_FACULTY\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Crear un docente"
           }
         },
         {
@@ -709,12 +1029,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/teachers?page=1&limit=20",
+              "raw": "{{baseUrl}}/api/v1/teachers?page=1&limit=20",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "teachers"
               ],
               "query": [
@@ -727,7 +1048,8 @@
                   "value": "20"
                 }
               ]
-            }
+            },
+            "description": "Listar docentes (filtros: q, faculty, active)"
           }
         },
         {
@@ -736,16 +1058,18 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/teachers/me",
+              "raw": "{{baseUrl}}/api/v1/teachers/me",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "teachers",
                 "me"
               ]
-            }
+            },
+            "description": "Mi perfil de docente"
           }
         },
         {
@@ -754,12 +1078,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/teachers/:id",
+              "raw": "{{baseUrl}}/api/v1/teachers/:id",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "teachers",
                 ":id"
               ],
@@ -769,7 +1094,8 @@
                   "value": ""
                 }
               ]
-            }
+            },
+            "description": "Ver un docente por ID"
           }
         },
         {
@@ -783,12 +1109,13 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/teachers/:id",
+              "raw": "{{baseUrl}}/api/v1/teachers/:id",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
+                "v1",
                 "teachers",
                 ":id"
               ],
@@ -801,16 +1128,2227 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"code\": \"DOC-001\",\n    \"department\": \"Matematicas\",\n    \"active\": true\n}",
+              "raw": "{\n  \"code\": \"DOC-001\",\n  \"active\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Editar un docente"
+          }
+        }
+      ]
+    },
+    {
+      "name": "subjects",
+      "item": [
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subjects",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "subjects"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"MAT201\",\n  \"name\": \"Calculo 2\",\n  \"credits\": 4,\n  \"program\": \"PEGA_AQUI_EL_ID_DEL_PROGRAMA\",\n  \"semester\": 2,\n  \"prerequisites\": [\n    \"PEGA_AQUI_EL_ID_DE_LA_MATERIA_PRERREQUISITO\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Crear una materia"
+          }
+        },
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subjects?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "subjects"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Listar materias (filtros: q, program, semester, active)"
+          }
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subjects/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "subjects",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Ver una materia por ID"
+          }
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subjects/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "subjects",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Calculo Diferencial\",\n  \"credits\": 4,\n  \"semester\": 1,\n  \"prerequisites\": [],\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Editar una materia"
+          }
+        }
+      ]
+    },
+    {
+      "name": "periods",
+      "item": [
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/periods",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "periods"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"2026-2\",\n  \"startDate\": \"2026-08-01\",\n  \"endDate\": \"2026-12-15\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Crear un periodo"
+          }
+        },
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/periods?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "periods"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Listar periodos (filtro: status)"
+          }
+        },
+        {
+          "name": "Periodo abierto actual",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/periods/current",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "periods",
+                "current"
+              ]
+            },
+            "description": "Periodo abierto actual"
+          }
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/periods/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "periods",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Ver un periodo por ID"
+          }
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/periods/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "periods",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"abierto\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Editar un periodo"
+          }
+        },
+        {
+          "name": "Revision previa al cierre: matriculas activas pendientes por grupo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/periods/:id/close-check",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "periods",
+                ":id",
+                "close-check"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Revision previa al cierre: matriculas activas pendientes por grupo"
+          }
+        },
+        {
+          "name": "Cierra el periodo (abierto -> cerrado). Es irreversible",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/periods/:id/close",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "periods",
+                ":id",
+                "close"
+              ],
+              "query": [
+                {
+                  "key": "cancelPending",
+                  "value": "true",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Cierra el periodo (abierto -> cerrado). Es irreversible"
+          }
+        }
+      ]
+    },
+    {
+      "name": "students",
+      "item": [
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": \"PEGA_AQUI_EL_ID_DEL_USUARIO_ESTUDIANTE\",\n  \"code\": \"2026001\",\n  \"program\": \"PEGA_AQUI_EL_ID_DEL_PROGRAMA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Crear un estudiante"
+          }
+        },
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Listar estudiantes (filtros: q, program, active)"
+          }
+        },
+        {
+          "name": "Mi perfil",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "me"
+              ]
+            },
+            "description": "Mi perfil de estudiante"
+          }
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Ver un estudiante por ID"
+          }
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"2026001\",\n  \"program\": \"PEGA_AQUI_EL_ID_DEL_PROGRAMA\",\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Editar un estudiante"
+          }
+        }
+      ]
+    },
+    {
+      "name": "groups",
+      "item": [
+        {
+          "name": "Crear un grupo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/groups",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"PEGA_AQUI_EL_ID_SUBJECT\",\n  \"teacher\": \"PEGA_AQUI_EL_ID_TEACHER\",\n  \"period\": \"PEGA_AQUI_EL_ID_PERIOD\",\n  \"capacity\": 30,\n  \"schedule\": [\n    {\n      \"day\": \"lunes\",\n      \"startTime\": \"07:00\",\n      \"endTime\": \"09:00\",\n      \"classroom\": \"PEGA_AQUI_EL_ID_CLASSROOM\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Crear un grupo"
+          }
+        },
+        {
+          "name": "Listar grupos (filtros: period, subject, teacher, day, available, active)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/groups",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                },
+                {
+                  "key": "subject",
+                  "value": "PEGA_AQUI_EL_ID_SUBJECT",
+                  "disabled": true
+                },
+                {
+                  "key": "teacher",
+                  "value": "PEGA_AQUI_EL_ID_TEACHER",
+                  "disabled": true
+                },
+                {
+                  "key": "active",
+                  "value": "true",
+                  "disabled": true
+                },
+                {
+                  "key": "available",
+                  "value": "true",
+                  "disabled": true
+                },
+                {
+                  "key": "day",
+                  "value": "lunes",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Listar grupos (filtros: period, subject, teacher, day, available, active)"
+          }
+        },
+        {
+          "name": "Mis grupos (docente)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/groups/mine",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                "mine"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                },
+                {
+                  "key": "subject",
+                  "value": "PEGA_AQUI_EL_ID_SUBJECT",
+                  "disabled": true
+                },
+                {
+                  "key": "teacher",
+                  "value": "PEGA_AQUI_EL_ID_TEACHER",
+                  "disabled": true
+                },
+                {
+                  "key": "active",
+                  "value": "true",
+                  "disabled": true
+                },
+                {
+                  "key": "available",
+                  "value": "true",
+                  "disabled": true
+                },
+                {
+                  "key": "day",
+                  "value": "lunes",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Mis grupos (docente)"
+          }
+        },
+        {
+          "name": "Ver un grupo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/groups/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Ver un grupo por ID"
+          }
+        },
+        {
+          "name": "Editar un grupo",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/groups/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Editar un grupo"
+          }
+        }
+      ]
+    },
+    {
+      "name": "classrooms",
+      "item": [
+        {
+          "name": "Crear un salon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/classrooms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "classrooms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"B-203\",\n  \"building\": \"B\",\n  \"floor\": 2,\n  \"capacity\": 40\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Crear un salon"
+          }
+        },
+        {
+          "name": "Listar salones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/classrooms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "classrooms"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "building",
+                  "value": "B",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "aula",
+                  "disabled": true
+                },
+                {
+                  "key": "minCapacity",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Listar salones"
+          }
+        },
+        {
+          "name": "Ver un salon por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/classrooms/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "classrooms",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Ver un salon por ID"
+          }
+        },
+        {
+          "name": "Editar un salon",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/classrooms/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "classrooms",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Editar un salon"
+          }
+        }
+      ]
+    },
+    {
+      "name": "notifications",
+      "item": [
+        {
+          "name": "Enviar un aviso a un usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notifications"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": \"PEGA_AQUI_EL_ID_USER\",\n  \"title\": \"Cambio de salon\",\n  \"message\": \"Tu clase del lunes pasa al salon B-204.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Enviar un aviso a un usuario"
+          }
+        },
+        {
+          "name": "Mis notificaciones (con contador de no leidas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/notifications/mine",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notifications",
+                "mine"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "read",
+                  "value": "true",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Mis notificaciones (con contador de no leidas)"
+          }
+        },
+        {
+          "name": "Marcar todas mis notificaciones como leidas",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/notifications/read-all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notifications",
+                "read-all"
+              ]
+            },
+            "description": "Marcar todas mis notificaciones como leidas"
+          }
+        },
+        {
+          "name": "Marcar una notificacion como leida",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/notifications/:id/read",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "notifications",
+                ":id",
+                "read"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Marcar una notificacion como leida"
+          }
+        }
+      ]
+    },
+    {
+      "name": "enrollments",
+      "item": [
+        {
+          "name": "Matricular en un grupo (valida cupo, prerrequisitos, cruces de horario y creditos)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/enrollments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groupId\": \"PEGA_AQUI_EL_ID_GROUPID\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Matricular en un grupo (valida cupo, prerrequisitos, cruces de horario y creditos)"
+          }
+        },
+        {
+          "name": "Listar matriculas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/enrollments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "student",
+                  "value": "PEGA_AQUI_EL_ID_STUDENT",
+                  "disabled": true
+                },
+                {
+                  "key": "group",
+                  "value": "Ejemplo",
+                  "disabled": true
+                },
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "activa",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Listar matriculas"
+          }
+        },
+        {
+          "name": "Mis matriculas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/enrollments/mine",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments",
+                "mine"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "student",
+                  "value": "PEGA_AQUI_EL_ID_STUDENT",
+                  "disabled": true
+                },
+                {
+                  "key": "group",
+                  "value": "Ejemplo",
+                  "disabled": true
+                },
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "activa",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Mis matriculas"
+          }
+        },
+        {
+          "name": "Ver una matricula por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/enrollments/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Ver una matricula por ID"
+          }
+        },
+        {
+          "name": "Cancelar una matricula activa (libera el cupo)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/enrollments/:id/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "enrollments",
+                ":id",
+                "cancel"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Cancelar una matricula activa (libera el cupo)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "evaluations",
+      "item": [
+        {
+          "name": "Crear una evaluacion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/evaluations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "evaluations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"group\": \"PEGA_AQUI_EL_ID_GROUP\",\n  \"name\": \"Parcial 1\",\n  \"weight\": 25\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Crear una evaluacion"
+          }
+        },
+        {
+          "name": "Listar evaluaciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/evaluations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "evaluations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "group",
+                  "value": "Ejemplo",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Listar evaluaciones"
+          }
+        },
+        {
+          "name": "Ver una evaluacion por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/evaluations/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "evaluations",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Ver una evaluacion por ID"
+          }
+        },
+        {
+          "name": "Editar una evaluacion",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/evaluations/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "evaluations",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Editar una evaluacion"
+          }
+        }
+      ]
+    },
+    {
+      "name": "grades",
+      "item": [
+        {
+          "name": "Registrar o corregir una nota (idempotente)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/grades",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "grades"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enrollment\": \"PEGA_AQUI_EL_ID_ENROLLMENT\",\n  \"evaluation\": \"PEGA_AQUI_EL_ID_EVALUATION\",\n  \"value\": 4.2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Registrar o corregir una nota (idempotente)"
+          }
+        },
+        {
+          "name": "Consultar notas de una matricula o de una evaluacion",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/grades",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "grades"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "enrollment",
+                  "value": "PEGA_AQUI_EL_ID_ENROLLMENT",
+                  "disabled": true
+                },
+                {
+                  "key": "evaluation",
+                  "value": "PEGA_AQUI_EL_ID_EVALUATION",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Consultar notas de una matricula o de una evaluacion"
+          }
+        },
+        {
+          "name": "Registrar varias notas a la vez (planilla); informa las que fallaron",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/grades/bulk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "grades",
+                "bulk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"enrollment\": \"PEGA_AQUI_EL_ID_ENROLLMENT\",\n      \"evaluation\": \"PEGA_AQUI_EL_ID_EVALUATION\",\n      \"value\": 4.2\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Registrar varias notas a la vez (planilla); informa las que fallaron"
+          }
+        },
+        {
+          "name": "Mis notas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/grades/mine",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "grades",
+                "mine"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "enrollment",
+                  "value": "PEGA_AQUI_EL_ID_ENROLLMENT",
+                  "disabled": true
+                },
+                {
+                  "key": "evaluation",
+                  "value": "PEGA_AQUI_EL_ID_EVALUATION",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Mis notas"
+          }
+        },
+        {
+          "name": "Calcular la nota final de una matricula y marcarla aprobada/reprobada",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/grades/finalize/:enrollmentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "grades",
+                "finalize",
+                ":enrollmentId"
+              ],
+              "variable": [
+                {
+                  "key": "enrollmentId",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Calcular la nota final de una matricula y marcarla aprobada/reprobada"
+          }
+        }
+      ]
+    },
+    {
+      "name": "academics",
+      "item": [
+        {
+          "name": "Lista de estudiantes matriculados en un grupo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/groups/:id/roster",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                ":id",
+                "roster"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "activa",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Lista de estudiantes matriculados en un grupo"
+          }
+        },
+        {
+          "name": "Planilla de notas del grupo: evaluaciones x estudiantes, con promedio parcial",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/groups/:id/grade-sheet",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                ":id",
+                "grade-sheet"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Planilla de notas del grupo: evaluaciones x estudiantes, con promedio parcial"
+          }
+        },
+        {
+          "name": "Finaliza en bloque las matriculas activas del grupo (calcula nota final y aprueba/reprueba)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/groups/:id/finalize",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "groups",
+                ":id",
+                "finalize"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Finaliza en bloque las matriculas activas del grupo (calcula nota final y aprueba/reprueba)"
+          }
+        },
+        {
+          "name": "Mi horario semanal en un periodo (por defecto el abierto)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students/me/schedule",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "me",
+                "schedule"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Mi horario semanal en un periodo (por defecto el abierto)"
+          }
+        },
+        {
+          "name": "Grupos del periodo abierto que puedo matricular (cupo, prerrequisitos y materia pendiente)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students/me/available-groups",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "me",
+                "available-groups"
+              ],
+              "query": [
+                {
+                  "key": "all",
+                  "value": "true",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Grupos del periodo abierto que puedo matricular (cupo, prerrequisitos y materia pendiente)"
+          }
+        },
+        {
+          "name": "Mi malla curricular: que aprobe, que cursa y que puedo matricular",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students/me/progress",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "me",
+                "progress"
+              ]
+            },
+            "description": "Mi malla curricular: que aprobe, que cursa y que puedo matricular"
+          }
+        },
+        {
+          "name": "Malla curricular y avance de un estudiante",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students/:id/progress",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                ":id",
+                "progress"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Malla curricular y avance de un estudiante"
+          }
+        },
+        {
+          "name": "Malla curricular de un programa: materias por semestre con prerrequisitos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/programs/:id/curriculum",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "programs",
+                ":id",
+                "curriculum"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Malla curricular de un programa: materias por semestre con prerrequisitos"
+          }
+        },
+        {
+          "name": "Mi historial academico: materias por periodo, promedio y avance de la carrera",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students/me/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                "me",
+                "history"
+              ]
+            },
+            "description": "Mi historial academico: materias por periodo, promedio y avance de la carrera"
+          }
+        },
+        {
+          "name": "Horario semanal de un estudiante",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students/:id/schedule",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                ":id",
+                "schedule"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Horario semanal de un estudiante"
+          }
+        },
+        {
+          "name": "Historial academico de un estudiante",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/students/:id/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "students",
+                ":id",
+                "history"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Historial academico de un estudiante"
+          }
+        },
+        {
+          "name": "Mi horario de clases en un periodo (por defecto el abierto)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/teachers/me/schedule",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "teachers",
+                "me",
+                "schedule"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Mi horario de clases en un periodo (por defecto el abierto)"
+          }
+        },
+        {
+          "name": "Horario de clases de un docente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/teachers/:id/schedule",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "teachers",
+                ":id",
+                "schedule"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "description": "ID real del recurso"
+                }
+              ]
+            },
+            "description": "Horario de clases de un docente"
+          }
+        }
+      ]
+    },
+    {
+      "name": "reports",
+      "item": [
+        {
+          "name": "Tablero general: conteos del sistema y estado del periodo abierto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "dashboard"
+              ]
+            },
+            "description": "Tablero general: conteos del sistema y estado del periodo abierto"
+          }
+        },
+        {
+          "name": "Matriculas y estudiantes por programa en un periodo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/enrollments-by-program",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "enrollments-by-program"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                },
+                {
+                  "key": "program",
+                  "value": "PEGA_AQUI_EL_ID_PROGRAM",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "minFailed",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Matriculas y estudiantes por programa en un periodo"
+          }
+        },
+        {
+          "name": "Ocupacion de los grupos (los mas llenos primero)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/group-occupancy",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "group-occupancy"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                },
+                {
+                  "key": "program",
+                  "value": "PEGA_AQUI_EL_ID_PROGRAM",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "minFailed",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Ocupacion de los grupos (los mas llenos primero)"
+          }
+        },
+        {
+          "name": "Aprobacion y promedio por materia (las de menor aprobacion primero)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/subject-performance",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "subject-performance"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                },
+                {
+                  "key": "program",
+                  "value": "PEGA_AQUI_EL_ID_PROGRAM",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "minFailed",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Aprobacion y promedio por materia (las de menor aprobacion primero)"
+          }
+        },
+        {
+          "name": "Mejores promedios del periodo (ponderados por creditos)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/top-students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "top-students"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                },
+                {
+                  "key": "program",
+                  "value": "PEGA_AQUI_EL_ID_PROGRAM",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "minFailed",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Mejores promedios del periodo (ponderados por creditos)"
+          }
+        },
+        {
+          "name": "Estudiantes con materias reprobadas en el periodo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/at-risk-students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "at-risk-students"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                },
+                {
+                  "key": "program",
+                  "value": "PEGA_AQUI_EL_ID_PROGRAM",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "minFailed",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Estudiantes con materias reprobadas en el periodo"
+          }
+        },
+        {
+          "name": "Carga docente: grupos, estudiantes y creditos por docente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/teacher-load",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "teacher-load"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "PEGA_AQUI_EL_ID_PERIOD",
+                  "disabled": true
+                },
+                {
+                  "key": "program",
+                  "value": "PEGA_AQUI_EL_ID_PROGRAM",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "minFailed",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Carga docente: grupos, estudiantes y creditos por docente"
+          }
+        },
+        {
+          "name": "Programas, docentes y estudiantes por facultad",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/faculty-summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "reports",
+                "faculty-summary"
+              ]
+            },
+            "description": "Programas, docentes y estudiantes por facultad"
           }
         }
       ]
     }
-  ]
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  }
 }

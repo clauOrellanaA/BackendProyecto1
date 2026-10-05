@@ -1,0 +1,74 @@
+{
+  "enrollments": [
+    {
+      "_id": {
+        "$oid": "6abf0b8bfead57fb41c12dfb"
+      },
+      "student": {
+        "$oid": "6abf0b8bfead57fb41c12b9c"
+      },
+      "group": {
+        "$oid": "6abf0b8bfead57fb41c12c3e"
+      },
+      "subject": {
+        "$oid": "6abf0b8bfead57fb41c129c0"
+      },
+      "period": {
+        "$oid": "6abf0b8bfead57fb41c12a35"
+      },
+      "status": "activa",
+      "createdAt": {
+        "$date": "2026-08-02T00:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-02T01:40:27.520Z"
+      },
+      "__v": 0
+    },
+    {
+      "_id": {
+        "$oid": "6ac057b232f78f9b9e14f3c2"
+      },
+      "student": {
+        "$oid": "6abf0b8bfead57fb41c12b9c"
+      },
+      "group": {
+        "$oid": "6abf0b8bfead57fb41c12c3e"
+      },
+      "subject": {
+        "$oid": "6abf0b8bfead57fb41c1299d"
+      },
+      "period": {
+        "$oid": "6abf0b8bfead57fb41c12a35"
+      },
+      "status": "activa",
+      "createdAt": {
+        "$date": "2026-08-02T01:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-02T01:40:27.520Z"
+      },
+      "__v": 0
+    }
+  ],
+  "faculty": {
+    "_id": {
+      "$oid": "6abf0b8bfead57fb41c12b0a"
+    },
+    "name": "Facultad de Comunicación",
+    "campus": "Cali",
+    "active": true,
+    "createdAt": {
+      "$date": "2025-10-25T01:40:27.523Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T01:40:27.520Z"
+    },
+    "__v": 0,
+    "dean": {
+      "$oid": "6ac057b232f78f9b9e14f3c3"
+    },
+    "code": "FAC-COM",
+    "email": "comunicacion@universidad.edu"
+  }
+}

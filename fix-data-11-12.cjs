@@ -1,0 +1,15 @@
+const fs=require('node:fs');const assert=require('node:assert/strict');
+const file='database/enrollments.json';const original=fs.readFileSync(file,'utf8');const rows=JSON.parse(original);
+const keep=rows.find(r=>r._id.$oid==='6abf0b8bfead57fb41c12dfb');const duplicate=rows.find(r=>r._id.$oid==='6ac057b232f78f9b9e14f3c2');assert.ok(keep&&duplicate);
+assert.deepEqual(keep.student,duplicate.student);assert.deepEqual(keep.group,duplicate.group);
+for(const name of fs.readdirSync('database').filter(f=>f.endsWith('.json')))for(const row of JSON.parse(fs.readFileSync('database/'+name)))for(const [key,value]of Object.entries(row))if(key!=='_id')assert.ok(!JSON.stringify(value)?.includes(duplicate._id.$oid),'Duplicado referenciado: '+name);
+const group=JSON.parse(fs.readFileSync('database/groups.json')).find(r=>r._id.$oid===keep.group.$oid);assert.ok(group);assert.deepEqual(keep.period,group.period);
+const facultyFile='database/faculties.json';const facultyOriginal=fs.readFileSync(facultyFile,'utf8');const faculties=JSON.parse(facultyOriginal);const faculty=faculties.find(r=>r._id.$oid==='6abf0b8bfead57fb41c12b0a');assert.equal(faculty.dean.$oid,'6ac057b232f78f9b9e14f3c3');
+assert.ok(!JSON.parse(fs.readFileSync('database/teachers.json')).some(r=>r._id.$oid===faculty.dean.$oid));
+fs.mkdirSync('artifacts',{recursive:true});const backup='artifacts/data-11-12-original.json';assert.ok(!fs.existsSync(backup),'No sobrescribir respaldo existente');
+fs.writeFileSync(backup,JSON.stringify({enrollments:[keep,duplicate],faculty},null,2)+'\n');
+const keepBefore=JSON.stringify(keep);keep.subject=group.subject;
+let updated=original.replace(keepBefore,JSON.stringify(keep));const duplicateText=JSON.stringify(duplicate);assert.ok(updated.includes(','+duplicateText)||updated.includes(duplicateText+','));updated=updated.includes(','+duplicateText)?updated.replace(','+duplicateText,''):updated.replace(duplicateText+',','');assert.equal(JSON.parse(updated).length,rows.length-1);
+const facultyBefore=JSON.stringify(faculty);delete faculty.dean;
+fs.writeFileSync(file,updated);fs.writeFileSync(facultyFile,facultyOriginal.replace(facultyBefore,JSON.stringify(faculty)));
+console.log('11: matrícula consolidada sin perder notas. 12: decano opcional sin asignar. Respaldo:',backup);

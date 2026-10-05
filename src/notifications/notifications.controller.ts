@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUser, CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -30,6 +32,7 @@ export class NotificationsController {
   }
 
   // Debe ir antes de ':id/read' para que 'read-all' no se interprete como un ID
+  @ApiResponse({ status: 200, schema: responseSchemas.NotificationsController_readAll })
   @ApiOperation({ summary: 'Marcar todas mis notificaciones como leidas' })
   @Patch('read-all')
   @HttpCode(200)

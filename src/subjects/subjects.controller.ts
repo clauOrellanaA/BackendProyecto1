@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -21,6 +23,7 @@ export class SubjectsController {
     return this.subjectsService.create(dto);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.SubjectsController_findAll })
   @ApiOperation({ summary: 'Listar materias (filtros: q, program, semester, active)' })
   @Get()
   findAll(@Query() query: SubjectsQueryDto): Promise<Paginated<Subject>> {

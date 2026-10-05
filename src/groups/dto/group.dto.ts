@@ -65,7 +65,7 @@ export class CreateGroupDto {
 }
 
 // La materia y el periodo no se pueden cambiar una vez creado el grupo
-export class UpdateGroupDto extends PartialType(OmitType(CreateGroupDto, ['subject', 'period'] as const)) {
+export class UpdateGroupDto extends PartialType(OmitType(CreateGroupDto, ['subject', 'period'] as const), { skipNullProperties: false }) {
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()

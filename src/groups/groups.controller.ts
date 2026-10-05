@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUser, CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -22,24 +24,26 @@ export class GroupsController {
     return this.groupsService.create(dto);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.GroupsController_findAll })
   @ApiOperation({ summary: 'Listar grupos (filtros: period, subject, teacher, day, available, active)' })
   @Get()
   findAll(@Query() query: GroupsQueryDto): Promise<Paginated<Group>> {
     return this.groupsService.findAll(query);
   }
 
-  @ApiOperation({ summary: 'Ver un grupo por ID' })
-  @Get(':id')
-  findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<Group> {
-    return this.groupsService.findOne(id);
-  }
-
   // Debe ir antes de ':id' para que 'mine' no se interprete como un ID
+  @ApiResponse({ status: 200, schema: responseSchemas.GroupsController_mine })
   @ApiOperation({ summary: 'Mis grupos (docente)' })
   @Roles(Role.Docente)
   @Get('mine')
   mine(@CurrentUser() user: AuthUser, @Query() query: GroupsQueryDto): Promise<Paginated<Group>> {
     return this.groupsService.findMine(user.id, query);
+  }
+
+  @ApiOperation({ summary: 'Ver un grupo por ID' })
+  @Get(':id')
+  findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<Group> {
+    return this.groupsService.findOne(id);
   }
 
   @ApiOperation({ summary: 'Editar un grupo' })

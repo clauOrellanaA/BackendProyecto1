@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUser, CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -16,6 +18,7 @@ export class AcademicController {
 
   /* ----- grupos (admin o docente a cargo) ----- */
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_roster })
   @ApiOperation({ summary: 'Lista de estudiantes matriculados en un grupo' })
   @Roles(Role.Admin, Role.Docente)
   @Get('groups/:id/roster')
@@ -23,6 +26,7 @@ export class AcademicController {
     return this.academicService.roster(id, query.status, user);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_gradeSheet })
   @ApiOperation({ summary: 'Planilla de notas del grupo: evaluaciones x estudiantes, con promedio parcial' })
   @Roles(Role.Admin, Role.Docente)
   @Get('groups/:id/grade-sheet')
@@ -30,6 +34,7 @@ export class AcademicController {
     return this.academicService.gradeSheet(id, user);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_finalizeGroup })
   @ApiOperation({ summary: 'Finaliza en bloque las matriculas activas del grupo (calcula nota final y aprueba/reprueba)' })
   @Roles(Role.Admin, Role.Docente)
   @Post('groups/:id/finalize')
@@ -40,6 +45,7 @@ export class AcademicController {
 
   /* ----- horario e historial del estudiante ('me' va antes de ':id') ----- */
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_mySchedule })
   @ApiOperation({ summary: 'Mi horario semanal en un periodo (por defecto el abierto)' })
   @Roles(Role.Estudiante)
   @Get('students/me/schedule')
@@ -47,6 +53,7 @@ export class AcademicController {
     return this.academicService.studentSchedule(null, user.id, query.period);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_availableForMe })
   @ApiOperation({ summary: 'Grupos del periodo abierto que puedo matricular (cupo, prerrequisitos y materia pendiente)' })
   @Roles(Role.Estudiante)
   @Get('students/me/available-groups')
@@ -54,6 +61,7 @@ export class AcademicController {
     return this.academicService.availableGroups(user.id, query.all ?? false);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_myProgress })
   @ApiOperation({ summary: 'Mi malla curricular: que aprobe, que cursa y que puedo matricular' })
   @Roles(Role.Estudiante)
   @Get('students/me/progress')
@@ -61,6 +69,7 @@ export class AcademicController {
     return this.academicService.progress(null, user.id);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_studentProgress })
   @ApiOperation({ summary: 'Malla curricular y avance de un estudiante' })
   @Roles(Role.Admin, Role.Docente)
   @Get('students/:id/progress')
@@ -68,12 +77,14 @@ export class AcademicController {
     return this.academicService.progress(id, null);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_curriculum })
   @ApiOperation({ summary: 'Malla curricular de un programa: materias por semestre con prerrequisitos' })
   @Get('programs/:id/curriculum')
   curriculum(@Param('id', ParseObjectIdPipe) id: string) {
     return this.academicService.curriculum(id);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_myHistory })
   @ApiOperation({ summary: 'Mi historial academico: materias por periodo, promedio y avance de la carrera' })
   @Roles(Role.Estudiante)
   @Get('students/me/history')
@@ -81,6 +92,7 @@ export class AcademicController {
     return this.academicService.history(null, user.id);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_studentSchedule })
   @ApiOperation({ summary: 'Horario semanal de un estudiante' })
   @Roles(Role.Admin, Role.Docente)
   @Get('students/:id/schedule')
@@ -88,6 +100,7 @@ export class AcademicController {
     return this.academicService.studentSchedule(id, null, query.period);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_studentHistory })
   @ApiOperation({ summary: 'Historial academico de un estudiante' })
   @Roles(Role.Admin, Role.Docente)
   @Get('students/:id/history')
@@ -97,6 +110,7 @@ export class AcademicController {
 
   /* ----- horario del docente ----- */
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_myTeacherSchedule })
   @ApiOperation({ summary: 'Mi horario de clases en un periodo (por defecto el abierto)' })
   @Roles(Role.Docente)
   @Get('teachers/me/schedule')
@@ -104,6 +118,7 @@ export class AcademicController {
     return this.academicService.teacherSchedule(null, user.id, query.period);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AcademicController_teacherSchedule })
   @ApiOperation({ summary: 'Horario de clases de un docente' })
   @Roles(Role.Admin)
   @Get('teachers/:id/schedule')

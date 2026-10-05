@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Body, Controller, Get, HttpCode, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
@@ -11,6 +13,7 @@ import { LoginDto } from './dto/login.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiResponse({ status: 200, schema: responseSchemas.AuthController_login })
   @ApiOperation({ summary: 'Iniciar sesion: devuelve el token JWT' })
   @Public()
   @Post('login')
@@ -27,6 +30,7 @@ export class AuthController {
   }
 
   // Cualquier usuario autenticado cambia su propia clave y recibe un token nuevo
+  @ApiResponse({ status: 200, schema: responseSchemas.AuthController_changePassword })
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Cambiar mi contrasena (devuelve un token nuevo)' })
   @Patch('change-password')

@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUser, CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -11,18 +13,19 @@ import { Evaluation } from './schemas/evaluation.schema';
 
 @ApiTags('evaluations')
 @ApiBearerAuth()
-@Controller('evaluationslalala')
+@Controller('evaluations')
 export class EvaluationsController {
   constructor(private readonly evaluationsService: EvaluationsService) {}
 
   @ApiOperation({ summary: 'Crear una evaluacion' })
   @Roles(Role.Admin, Role.Docente)
   @Post()
-  @HttpCode(HttpStatus.BAD_REQUEST)
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateEvaluationDto, @CurrentUser() user: AuthUser): Promise<Evaluation> {
     return this.evaluationsService.create(dto, user);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.EvaluationsController_findAll })
   @ApiOperation({ summary: 'Listar evaluaciones' })
   @Get()
   findAll(@Query() query: EvaluationsQueryDto): Promise<Paginated<Evaluation>> {

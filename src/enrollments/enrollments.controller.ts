@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUser, CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -22,6 +24,7 @@ export class EnrollmentsController {
     return this.enrollmentsService.enroll(dto, user);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.EnrollmentsController_findAll })
   @ApiOperation({ summary: 'Listar matriculas' })
   @Roles(Role.Admin)
   @Get()
@@ -30,8 +33,9 @@ export class EnrollmentsController {
   }
 
   // Debe ir antes de ':id' para que 'mine' no se interprete como un ID
+  @ApiResponse({ status: 200, schema: responseSchemas.EnrollmentsController_mine })
   @ApiOperation({ summary: 'Mis matriculas' })
-  @Roles(Role.Docente)
+  @Roles(Role.Estudiante)
   @Get('mine')
   mine(@CurrentUser() user: AuthUser, @Query() query: EnrollmentsQueryDto): Promise<Paginated<Enrollment>> {
     return this.enrollmentsService.findMine(user.id, query);

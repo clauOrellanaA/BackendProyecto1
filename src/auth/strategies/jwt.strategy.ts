@@ -11,6 +11,7 @@ export interface JwtPayload {
   email: string;
   role: Role;
   iat?: number; // fecha de emision (segundos), la agrega el JWT automaticamente
+  passwordChangedAt?: number;
 }
 
 @Injectable()
@@ -33,7 +34,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Usuario inactivo o inexistente');
     }
     // Un token emitido antes del ultimo cambio de clave ya no sirve
-    if (user.passwordChangedAt && payload.iat !== undefined && payload.iat < Math.floor(user.passwordChangedAt.getTime() / 1000)) {
+    if ((payload.passwordChangedAt ?? 0) !== (user.passwordChangedAt?.getTime() ?? 0)) {
       throw new UnauthorizedException('Sesion vencida: la contrasena fue cambiada');
     }
     return { id: payload.sub, email: user.email, role: user.role };

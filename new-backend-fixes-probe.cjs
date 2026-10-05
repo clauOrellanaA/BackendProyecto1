@@ -1,0 +1,45 @@
+require('reflect-metadata');
+require('dotenv').config({quiet:true});
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const mongoose=require('mongoose');
+const {EnrollmentsService}=require('./dist/enrollments/enrollments.service');
+const {EnrollmentStatus}=require('./dist/enrollments/schemas/enrollment.schema');
+const {GroupsService}=require('./dist/groups/groups.service');
+const {EnrollmentsController}=require('./dist/enrollments/enrollments.controller');
+const {RolesGuard}=require('./dist/auth/guards/roles.guard');
+const {Reflector}=require('@nestjs/core');
+let failures=0;
+async function check(name,run){try{await run();console.log('PASS',name);}catch(e){failures++;console.log('FAIL',name,e.message);}}
+(async()=>{
+ await check('MongoDB URI configurada',async()=>{await mongoose.connect(process.env.MONGODB_URI,{serverSelectionTimeoutMS:1500});await mongoose.disconnect();});
+ const service=new EnrollmentsService({}, {}, {}, {},{findRaw:async()=>({active:true,period:'p',subject:'s',number:1})},{findOne:async()=>({name:'Materia'})},{findOne:async()=>({status:'abierto'})},{notify:async()=>{}});
+ service.resolveStudent=async()=>({id:'s',active:true,user:'u'});
+ service.assertNotDuplicated=async()=>null;service.assertPrerequisites=service.assertNoScheduleConflict=service.assertCreditLimit=async()=>{};
+ service.reserveSeat=async()=>({status:EnrollmentStatus.Active,_id:'e'});
+ await check('matricula activa confirmada',async()=>assert.equal((await service.enroll({groupId:'g'},{role:'estudiante'})).status,EnrollmentStatus.Active));
+ const groups=new GroupsService({}, {}, {findByUserId:async()=>({id:'own'})},{},{},{});groups.findRaw=async()=>({teacher:'other'});
+ await check('docente no gestiona grupo ajeno',async()=>assert.rejects(()=>groups.assertCanManage('g',{id:'u',role:'docente'}),e=>e.getStatus?.()===403));
+ await check('admin gestiona grupo ajeno',async()=>assert.ok(await groups.assertCanManage('g',{id:'u',role:'admin'})));
+ groups.findRaw=async()=>({teacher:'own'});
+ await check('docente gestiona grupo propio',async()=>assert.ok(await groups.assertCanManage('g',{id:'u',role:'docente'})));
+ await check('estudiante no gestiona grupos',async()=>assert.rejects(()=>groups.assertCanManage('g',{id:'u',role:'estudiante'}),e=>e.getStatus?.()===403));
+ const guard=new RolesGuard(new Reflector());
+ const context=role=>({getHandler:()=>EnrollmentsController.prototype.mine,getClass:()=>EnrollmentsController,switchToHttp:()=>({getRequest:()=>({user:{role}})})});
+ await check('estudiante accede a matriculas propias',async()=>assert.equal(guard.canActivate(context('estudiante')),true));
+ await check('docente rechazado de matriculas propias',async()=>assert.throws(()=>guard.canActivate(context('docente')),e=>e.getStatus?.()===403));
+ const session={withTransaction:async callback=>callback(),endSession:async()=>{}};
+ let updates=0;let seats=2;
+ const enrollment={status:EnrollmentStatus.Active,group:'g',period:'p',student:'s',subject:'s',save:async options=>{assert.equal(options.session,session);}};
+ const cancel=new EnrollmentsService({}, {updateOne:async(filter,update,options)=>{assert.equal(filter._id,'g');assert.equal(options.session,session);assert.equal(update.$inc.enrolled,-1);updates++;seats+=update.$inc.enrolled;}},{startSession:async()=>session},{findOne:async()=>({user:'u'})},{},{findOne:async()=>({name:'Materia'})},{findOne:async()=>({status:'abierto'})},{notify:async()=>{}});
+ cancel.findOwned=async()=>enrollment;cancel.findOne=async()=>enrollment;
+ await check('cancelacion libera cupo en misma sesion',async()=>{await cancel.cancel('e',{role:'admin'});assert.equal(updates,1);assert.equal(seats,1);assert.equal(enrollment.status,EnrollmentStatus.Cancelled);});
+ await check('segunda cancelacion no decrementa',async()=>{const before=updates;await assert.rejects(()=>cancel.cancel('e',{role:'admin'}));assert.equal(updates,before);});
+ let listenPort;
+ const app={setGlobalPrefix(){},useGlobalPipes(){},useGlobalFilters(){},listen:async port=>{listenPort=port;}};
+ class Builder{setTitle(){return this;}setDescription(){return this;}setVersion(){return this;}addBearerAuth(){return this;}addGlobalResponse(){return this;}build(){return {};}}
+ vm.runInNewContext(fs.readFileSync('dist/main.js','utf8'),{exports:{},process:{env:{PORT:'3217'}},require(name){if(name==='@nestjs/core')return {NestFactory:{create:async()=>app}};if(name==='@nestjs/swagger')return {DocumentBuilder:Builder,SwaggerModule:{setup(){},createDocument(){return {};}}};if(name==='./app.module')return {AppModule:class{}};if(name.includes('error-responses'))return {errorResponses:[]};if(name.includes('all-exceptions'))return {AllExceptionsFilter:class{}};return require(name);}});
+ await check('arranque usa PORT',async()=>{await new Promise(resolve=>setImmediate(resolve));assert.equal(listenPort,3217);});
+ await mongoose.disconnect();assert.equal(failures,0,failures+' comprobaciones fallaron');
+})().catch(async e=>{console.error(e.message);await mongoose.disconnect();process.exitCode=1;});

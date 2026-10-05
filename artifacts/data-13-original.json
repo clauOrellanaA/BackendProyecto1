@@ -1,0 +1,40 @@
+[
+  {
+    "_id": {
+      "$oid": "6abf0b8bfead57fb41c12df0"
+    },
+    "enrollment": {
+      "$oid": "6abf0b8bfead57fb41c12dee"
+    },
+    "evaluation": {
+      "$oid": "6abf0b8bfead57fb41c12dd3"
+    },
+    "value": 5.7,
+    "createdAt": {
+      "$date": "2026-10-20T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T01:40:27.520Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6abf0b8bfead57fb41c12dfc"
+    },
+    "enrollment": {
+      "$oid": "6abf0b8bfead57fb41c12dfb"
+    },
+    "evaluation": {
+      "$oid": "6abf0b8bfead57fb41c12df1"
+    },
+    "value": 5.7,
+    "createdAt": {
+      "$date": "2026-10-08T00:00:00Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T01:40:27.520Z"
+    },
+    "__v": 0
+  }
+]

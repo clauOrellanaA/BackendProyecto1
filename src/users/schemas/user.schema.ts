@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { Role } from '../../common/enums/role.enum';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -14,6 +15,7 @@ export class User {
 
   // select: false evita que el hash salga en consultas normales
   @Prop({ required: true, select: false })
+  @ApiHideProperty()
   passwordHash!: string;
 
   @Prop({ required: true, enum: Role, default: Role.Estudiante })

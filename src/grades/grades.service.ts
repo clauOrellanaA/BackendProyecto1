@@ -103,7 +103,9 @@ export class GradesService {
     const enrollmentFilter: FilterQuery<EnrollmentDocument> = { student: student.id, status: { $ne: EnrollmentStatus.Cancelled } };
     if (query.enrollment) enrollmentFilter._id = query.enrollment;
     const ids = await this.enrollmentModel.find(enrollmentFilter).distinct('_id');
-    return this.list({ enrollment: { $in: ids } }, query);
+    const filter: FilterQuery<GradeDocument> = { enrollment: { $in: ids } };
+    if (query.evaluation) filter.evaluation = query.evaluation;
+    return this.list(filter, query);
   }
 
   // Calcula la nota final ponderada y deja la matricula como aprobada o reprobada
@@ -129,7 +131,7 @@ export class GradesService {
 
     const finalGrade = Math.round(evaluations.reduce((sum, e) => sum + (byEvaluation.get(String(e._id)) as number) * (e.weight / 100), 0) * 100) / 100;
     enrollment.finalGrade = finalGrade;
-    enrollment.status = finalGrade > PASSING_GRADE ? EnrollmentStatus.Passed : EnrollmentStatus.Failed;
+    enrollment.status = finalGrade >= PASSING_GRADE ? EnrollmentStatus.Passed : EnrollmentStatus.Failed;
     await enrollment.save();
 
     const [student, subject] = await Promise.all([

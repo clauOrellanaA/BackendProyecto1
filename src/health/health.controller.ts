@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Controller, Get, ServiceUnavailableException } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -9,6 +11,7 @@ import { Public } from '../auth/decorators/public.decorator';
 export class HealthController {
   constructor(@InjectConnection() private readonly connection: Connection) {}
 
+  @ApiResponse({ status: 200, schema: responseSchemas.HealthController_getHealth })
   @ApiOperation({ summary: 'Estado de la API y de la conexion con MongoDB' })
   @Public()
   @Get()

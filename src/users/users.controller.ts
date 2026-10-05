@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthUser, CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -17,15 +19,17 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiResponse({ status: 200, schema: responseSchemas.UsersController_findAll })
   @ApiOperation({ summary: 'Listar usuarios (filtros: role, active, q)' })
   @Get()
   findAll(@Query() query: UsersQueryDto): Promise<Paginated<User>> {
     return this.usersService.findAll(query);
   }
 
+  @ApiResponse({ status: 201, schema: responseSchemas.UsersController_create })
   @ApiOperation({ summary: 'Crear un usuario' })
   @Post()
-  @HttpCode(400)
+  @HttpCode(201)
   async create(@Body() dto: CreateUserDto): Promise<{ id: string; name: string; email: string; role: Role }> {
     const user = await this.usersService.create(dto);
     return { id: user.id, name: user.name, email: user.email, role: user.role };
@@ -38,18 +42,18 @@ export class UsersController {
     return this.usersService.updateOwnName(user.id, dto.name);
   }
 
-  @ApiOperation({ summary: 'Ver un usuario por ID' })
-  @Get(':id')
-  findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<User> {
-    return this.usersService.findOne(id);
-  }
-
   // Perfil propio: disponible para cualquier rol. Debe ir antes de ':id'
   @ApiOperation({ summary: 'Mi perfil de usuario' })
   @Roles(Role.Admin, Role.Docente, Role.Estudiante)
   @Get('me')
   me(@CurrentUser() user: AuthUser): Promise<User> {
     return this.usersService.findOne(user.id);
+  }
+
+  @ApiOperation({ summary: 'Ver un usuario por ID' })
+  @Get(':id')
+  findOne(@Param('id', ParseObjectIdPipe) id: string): Promise<User> {
+    return this.usersService.findOne(id);
   }
 
   @ApiOperation({ summary: 'Editar un usuario' })
@@ -59,6 +63,7 @@ export class UsersController {
   }
 
   // El admin define una clave nueva (por ejemplo si el usuario la olvido). Cierra sus sesiones activas
+  @ApiResponse({ status: 200, schema: responseSchemas.UsersController_resetPassword })
   @ApiOperation({ summary: 'Restablecer la contrasena de un usuario' })
   @Post(':id/reset-password')
   @HttpCode(200)

@@ -131,8 +131,8 @@ export class UsersService implements OnModuleInit {
       throw new BadRequestException('La nueva contrasena debe ser distinta de la actual');
     }
     user.passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
-    user.passwordChangedAt = new Date();
-    return user;
+    user.passwordChangedAt = new Date(Math.max(Date.now(), (user.passwordChangedAt?.getTime() ?? 0) + 1));
+    return user.save();
   }
 
   async resetPassword(id: string, newPassword: string): Promise<void> {
@@ -144,7 +144,7 @@ export class UsersService implements OnModuleInit {
   // Guarda la nueva clave e invalida las sesiones (tokens) anteriores
   private async setPassword(user: UserDocument, newPassword: string): Promise<UserDocument> {
     user.passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
-    user.passwordChangedAt = new Date();
+    user.passwordChangedAt = new Date(Math.max(Date.now(), (user.passwordChangedAt?.getTime() ?? 0) + 1));
     return user.save();
   }
 }

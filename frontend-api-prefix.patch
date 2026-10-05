@@ -1,0 +1,27 @@
+diff --git a/src/lib/server.ts b/src/lib/server.ts
+--- a/src/lib/server.ts
++++ b/src/lib/server.ts
+@@ -6,1 +6,2 @@
+ export const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:3000";
++export const BACKEND_API_URL = `${BACKEND_URL}/api/v1`;
+@@ -35,1 +36,1 @@
+-    res = await fetch(`${BACKEND_URL}/api${path}`, {
++    res = await fetch(`${BACKEND_API_URL}${path}`, {
+diff --git a/src/app/api/[...path]/route.ts b/src/app/api/[...path]/route.ts
+--- a/src/app/api/[...path]/route.ts
++++ b/src/app/api/[...path]/route.ts
+@@ -2,1 +2,1 @@
+-import { BACKEND_URL } from "@/lib/server";
++import { BACKEND_API_URL } from "@/lib/server";
+@@ -9,1 +9,1 @@
+-  const target = `${BACKEND_URL}/api/${path.join("/")}${request.nextUrl.search}`;
++  const target = `${BACKEND_API_URL}/${path.join("/")}${request.nextUrl.search}`;
+diff --git a/src/app/api/auth/login/route.ts b/src/app/api/auth/login/route.ts
+--- a/src/app/api/auth/login/route.ts
++++ b/src/app/api/auth/login/route.ts
+@@ -2,1 +2,1 @@
+-import { BACKEND_URL } from "@/lib/server";
++import { BACKEND_API_URL } from "@/lib/server";
+@@ -9,1 +9,1 @@
+-    res = await fetch(`${BACKEND_URL}/api/auth/login`, {
++    res = await fetch(`${BACKEND_API_URL}/auth/login`, {

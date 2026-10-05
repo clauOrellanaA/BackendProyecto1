@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -21,6 +23,7 @@ export class ClassroomsController {
     return this.classroomsService.create(dto);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.ClassroomsController_findAll })
   @ApiOperation({ summary: 'Listar salones' })
   @Get()
   findAll(@Query() query: ClassroomsQueryDto): Promise<Paginated<Classroom>> {

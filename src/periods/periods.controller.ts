@@ -1,3 +1,5 @@
+import { ApiResponse } from "@nestjs/swagger";
+import { responseSchemas } from "../common/docs/response-schemas";
 import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -21,6 +23,7 @@ export class PeriodsController {
     return this.periodsService.create(dto);
   }
 
+  @ApiResponse({ status: 200, schema: responseSchemas.PeriodsController_findAll })
   @ApiOperation({ summary: 'Listar periodos (filtro: status)' })
   @Get()
   findAll(@Query() query: PeriodsQueryDto): Promise<Paginated<Period>> {
